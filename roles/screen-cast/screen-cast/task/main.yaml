@@ -1,0 +1,56 @@
+- name: Install snapd screencast
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - snapd
+  tags:
+    - screencast
+
+- name: Create a symbolic link for classic snapd operations
+  become: true
+  file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    owner: root
+    group: root
+    state: link
+  tags:
+    - code
+
+- name: Install obs-studio
+  become: true
+  snap:
+    name: obs-studio
+    classic: yes
+  tags:
+    - screencast
+
+- name: Install shotcut
+  become: true
+  snap:
+    name: shotcut
+    classic: yes
+  tags:
+    - screencast
+
+- name: Install screenkey
+  become: true
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - screenkey
+  tags:
+    - screencast
+
+- name: copy rofi config file
+  copy:
+    src: files/screenkey.json
+    dest: "/home/{{ system_user }}/.config/screenkey.json"
+    owner: "{{ system_user }}"
+    group: "{{ system_group }}"
+    mode: "0644"
+  tags:
+    - screencast
